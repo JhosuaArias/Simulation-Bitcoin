@@ -18,8 +18,8 @@
       <file leaf-file-name="Graph.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Graph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="39" column="21" lean-forward="true" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+            <state relative-caret-position="85">
+              <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -306,7 +306,7 @@
       <workItem from="1505936422636" duration="2038000" />
       <workItem from="1506056536139" duration="71000" />
       <workItem from="1506058087829" duration="1233000" />
-      <workItem from="1506103405162" duration="1756000" />
+      <workItem from="1506103405162" duration="1916000" />
     </task>
     <task id="LOCAL-00001" summary="Arreglar en lo que me cagué">
       <created>1506103875524</created>
@@ -315,11 +315,18 @@
       <option name="project" value="LOCAL" />
       <updated>1506103875524</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Operadores básicos, primer nodo adyacente y siguiente nodo adyacente para grafos.">
+      <created>1506105248071</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1506105248071</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5181000" />
+    <option name="totallyTimeSpent" value="5341000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -361,7 +368,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Arreglar en lo que me cagué" />
-    <option name="LAST_COMMIT_MESSAGE" value="Arreglar en lo que me cagué" />
+    <MESSAGE value="Operadores básicos, primer nodo adyacente y siguiente nodo adyacente para grafos." />
+    <option name="LAST_COMMIT_MESSAGE" value="Operadores básicos, primer nodo adyacente y siguiente nodo adyacente para grafos." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -594,8 +602,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Graph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="39" column="21" lean-forward="true" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+        <state relative-caret-position="85">
+          <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
           <folding />
         </state>
       </provider>

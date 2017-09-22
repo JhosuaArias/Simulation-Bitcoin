@@ -9,7 +9,7 @@ public class Graph {
     public Graph () {
 
         this.asRelations = new boolean[maximumASes][maximumASes];
-        allAses = new ArrayList<As>();
+        this.allAses = new ArrayList<As>();
     }
 
     //------------------------------------------------------------------------------
