@@ -1,6 +1,9 @@
-import java.util.Stack;
+package Node;
 
-public class Node {
+import java.util.Stack;
+import Blockchain.Block;
+
+public class Miner {
 
     /*Attributes*/
     private As asFather;
@@ -8,7 +11,7 @@ public class Node {
     private Stack<Block> blockChain;
 
     /*Constructor*/
-    public Node(As asFather) {
+    public Miner(As asFather) {
         this.setAsFather(asFather);
     }
 

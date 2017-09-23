@@ -1,16 +1,18 @@
+package Node;
+
 import java.util.ArrayList;
 
 public class As {
 
 
     /*Attributes*/
-    private ArrayList<Node> connectedNodes;
+    private ArrayList<Miner> connectedMiners;
     private int id;
 
     /*Constructor*/
 
-    public As(ArrayList<Node> connectedNodes, int id) {
-        this.connectedNodes = connectedNodes;
+    public As(ArrayList<Miner> connectedMiners, int id) {
+        this.connectedMiners = connectedMiners;
         this.id = id;
     }
 
@@ -24,12 +26,12 @@ public class As {
     }
 
     /*Gets and sets*/
-    public ArrayList<Node> getConnectedNodes() {
-        return connectedNodes;
+    public ArrayList<Miner> getConnectedMiners() {
+        return connectedMiners;
     }
 
-    public void setConnectedNodes(ArrayList<Node> connectedNodes) {
-        this.connectedNodes = connectedNodes;
+    public void setConnectedMiners(ArrayList<Miner> connectedMiners) {
+        this.connectedMiners = connectedMiners;
     }
 
     public int getId() {

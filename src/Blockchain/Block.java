@@ -1,3 +1,5 @@
+package Blockchain;
+
 public class Block {
     /*Attributes*/
     private int blockId;
