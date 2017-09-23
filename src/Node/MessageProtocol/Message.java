@@ -38,7 +38,7 @@ public class Message {
         this.readBy_Ases = new ArrayList<>();
     }
 
-    public void readByAS (As as) {
+    public void newRead(As as) {
         this.readBy_Ases.add(as);
     }
 

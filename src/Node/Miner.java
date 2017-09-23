@@ -9,10 +9,10 @@ public class Miner {
     private As asFather;
     private double actualCurrency;
     private Stack<Block> blockChain;
-    private String miner_Id;
+    private int miner_Id;
 
     /*Constructor*/
-    public Miner(As asFather, String miner_Id) {
+    public Miner(As asFather, int miner_Id) {
         this.setAsFather(asFather);
         this.miner_Id = miner_Id;
     }
@@ -50,7 +50,7 @@ public class Miner {
         this.blockChain = blockChain;
     }
 
-    public String getMiner_Id() {
+    public int getMiner_Id() {
         return miner_Id;
     }
 

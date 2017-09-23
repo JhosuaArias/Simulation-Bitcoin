@@ -33,7 +33,7 @@ public class Graph {
         int index = 0;
         boolean repeat = true;
         while (index < this.allAses.size() && repeat) {
-            if(this.asRelations[asFather.getId()][index]) {
+            if(this.asRelations[asFather.getAs_Id()][index]) {
                 first = this.allAses.get(index);
                 repeat = false;
             }
@@ -46,10 +46,10 @@ public class Graph {
 
     public As getNextAs(As asFather, As asChild) {
         As next = null;
-        int index = asChild.getId();
+        int index = asChild.getAs_Id();
         boolean repeat = true;
         while (index < this.allAses.size() && repeat) {
-            if(this.asRelations[asFather.getId()][index]) {
+            if(this.asRelations[asChild.getAs_Id()][index]) {
                 next = this.allAses.get(index);
                 repeat = false;
             }

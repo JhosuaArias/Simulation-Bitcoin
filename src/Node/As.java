@@ -13,7 +13,7 @@ public class As extends GeneralNode {
     //------------------------------------------------------------------------------
 
     private HashMap<String, Miner> connectedMiners;
-    private String as_Id;
+    private int as_Id;
     private boolean simulationFinished;
 
     //------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ public class As extends GeneralNode {
      * Constructor of the class
      * @param as_Id
      */
-    public As( String as_Id ) {
+    public As( int as_Id ) {
         super();
         this.as_Id = as_Id;
     }
@@ -32,7 +32,7 @@ public class As extends GeneralNode {
      * @param miner
      */
     public void registerNewInnerNode (Miner miner) {
-        this.connectedMiners.put(miner.getMiner_Id(), miner);
+        this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
     }
 
     /**
@@ -71,6 +71,7 @@ public class As extends GeneralNode {
 
     public void handleMessage (Message message) {
         this.simulationFinished = message.isSimulationFinished();
+        message.newRead(this);
 
         /* Both methods need to send the message to everyone that doesn't have it */
         sendMessageToInnerNodes(message);
@@ -97,7 +98,7 @@ public class As extends GeneralNode {
         this.connectedMiners = connectedMiners;
     }
 
-    public String getAs_Id() {
+    public int getAs_Id() {
         return as_Id;
     }
 

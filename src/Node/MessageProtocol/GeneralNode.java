@@ -22,7 +22,6 @@ public class GeneralNode extends Thread {
     }
 
     public synchronized void receiveMessage (Message message) {
-        System.out.println("Node: Message received...");
         this.messageQueue.add(message);
         this.notify();
     }
