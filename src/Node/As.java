@@ -60,7 +60,7 @@ public class As extends GeneralNode {
             }
 
         }
-        System.out.println("AS: A message to end the simulation has been received");
+        System.out.println("AS: Ending AS process...");
     }
 
     @Override
@@ -70,6 +70,8 @@ public class As extends GeneralNode {
     }
 
     public void handleMessage (Message message) {
+        System.out.println("AS: Reading new message...");
+
         this.simulationFinished = message.isSimulationFinished();
         message.newRead(this);
 
@@ -92,10 +94,6 @@ public class As extends GeneralNode {
 
     public HashMap<String, Miner> getConnectedMiners() {
         return connectedMiners;
-    }
-
-    public void setConnectedMiners(HashMap<String, Miner>  connectedMiners) {
-        this.connectedMiners = connectedMiners;
     }
 
     public int getAs_Id() {
