@@ -18,14 +18,26 @@ public class Graph {
 
     //------------------------------------------------------------------------------
 
-    public void add_asRelation (int asX_id, int asY_id) {
+    public void add_Uni_AsRelation (int asX_id, int asY_id) {
 
         this.asRelations[asX_id][asY_id] = true;
     }
 
-    public void remove_asRelation (int asX_id, int asY_id) {
+    public void remove_Uni_AsRelation (int asX_id, int asY_id) {
 
         this.asRelations[asX_id][asY_id] = false;
+    }
+
+    public void add_Bi_AsRelation (int asX_id, int asY_id) {
+
+        this.asRelations[asX_id][asY_id] = true;
+        this.asRelations[asY_id][asX_id] = true;
+    }
+
+    public void remove_Bi_AsRelation (int asX_id, int asY_id) {
+
+        this.asRelations[asX_id][asY_id] = false;
+        this.asRelations[asY_id][asX_id] = true;
     }
 
     public As getFirstAs(As asFather) {
@@ -58,5 +70,15 @@ public class Graph {
             }
         }
         return next;
+    }
+
+    public boolean addAs(As newAs) {
+        if(allAses.size()<=10) {
+            allAses.add(newAs);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

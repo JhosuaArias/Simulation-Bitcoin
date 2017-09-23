@@ -81,10 +81,12 @@ public class As extends GeneralNode {
     }
 
     public boolean sendMessageToInnerNodes( Message message ) {
+
         return false;
     }
 
     public boolean sendMessageToAdyacentAses( Message message ) {
+
         return false;
     }
 
