@@ -1,15 +1,20 @@
-import java.util.Stack;
+package Node;
 
-public class Node {
+import java.util.Stack;
+import Blockchain.Block;
+
+public class Miner {
 
     /*Attributes*/
     private As asFather;
     private double actualCurrency;
     private Stack<Block> blockChain;
+    private int miner_Id;
 
     /*Constructor*/
-    public Node(As asFather) {
+    public Miner(As asFather, int miner_Id) {
         this.setAsFather(asFather);
+        this.miner_Id = miner_Id;
     }
 
     /*Methods*/
@@ -21,7 +26,9 @@ public class Node {
         return asFather;
     }
 
-    /*Getters and Setters*/
+    //------------------------------------------------------------------------------
+    //  Standard Setter and Getter section
+    //------------------------------------------------------------------------------
 
     public void setAsFather(As asFather) {
         this.asFather = asFather;
@@ -41,6 +48,10 @@ public class Node {
 
     public void setBlockChain(Stack<Block> blockChain) {
         this.blockChain = blockChain;
+    }
+
+    public int getMiner_Id() {
+        return miner_Id;
     }
 
 }
