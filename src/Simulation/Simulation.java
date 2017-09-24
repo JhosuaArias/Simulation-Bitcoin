@@ -41,7 +41,7 @@ public class Simulation {
         }
 
         for (int i = 0; i < 10 ; i++) {
-            graph.add_Bi_AsRelation(i,(i%10)+1);
+            allAses.get(i).registerAdyacentAs(allAses.get(((i+1)%10)));
         }
     }
 
