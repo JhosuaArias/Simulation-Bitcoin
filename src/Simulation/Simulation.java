@@ -7,20 +7,15 @@ import java.util.ArrayList;
 
 public class Simulation {
     /*Attributes*/
-    private Graph graph;
     private ArrayList<Miner> allMiners;
     private ArrayList<As> allAses;
 
     /*Constructor*/
     public Simulation() {
-        graph = new Graph();
         allMiners = new ArrayList<Miner>();
         allAses = new ArrayList<As>();
     }
 
-    public Graph getGraph() {
-        return graph;
-    }
 
 
     /*Methods*/
@@ -37,7 +32,6 @@ public class Simulation {
                 allMiners.add(miner);
             }
             allAses.add(as);
-            graph.addAs(as);
         }
 
         for (int i = 0; i < 10 ; i++) {
@@ -46,9 +40,6 @@ public class Simulation {
     }
 
     /*Getters and Setters*/
-    public void setGraph(Graph graph) {
-        this.graph = graph;
-    }
 
     public ArrayList<Miner> getAllMiners() {
         return allMiners;
