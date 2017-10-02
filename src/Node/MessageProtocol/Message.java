@@ -42,6 +42,10 @@ public class Message {
         this.readBy_Ases.add(as);
     }
 
+    public boolean isAlreadyReadBy (As as) {
+        return this.readBy_Ases.contains(as);
+    }
+
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------

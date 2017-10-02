@@ -12,13 +12,16 @@ public class MessageTest {
         for (As as: sim.getAllAses()) {
             as.start();
         }
+
         System.out.println("System: Waiting for nodes to be created...");
 
-        while (!sim.getAllAses().get(0).isReady()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (As as: sim.getAllAses()) {
+            while (!as.isReady()) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
         Message testMessage = new Message(true, false, null, null);

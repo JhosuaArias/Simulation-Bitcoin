@@ -22,18 +22,18 @@ public class As extends GeneralNode {
 
     /**
      * Constructor of the class
-     * @param as_Id
+     * @param as_Id the as's id
      */
     public As( int as_Id ) {
         super();
-        this.connectedMiners = new HashMap<String, Miner>();
-        this.adyacentAses = new ArrayList<As>();
+        this.connectedMiners = new HashMap<>();
+        this.adyacentAses = new ArrayList<>();
         this.as_Id = as_Id;
     }
 
     /**
      * Register a new inner node in the AS's nodes map
-     * @param miner
+     * @param miner the new miner
      */
     public void registerNewInnerNode (Miner miner) {
         this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
@@ -78,7 +78,7 @@ public class As extends GeneralNode {
         super.receiveMessage(message);
     }
 
-    public void handleMessage (Message message) {
+    private void handleMessage (Message message) {
         System.out.println("AS id: "+ as_Id+ "   Reading new message...");
 
         this.simulationFinished = message.isSimulationFinished();
@@ -90,13 +90,12 @@ public class As extends GeneralNode {
     }
 
     public boolean sendMessageToInnerNodes( Message message ) {
-
         return false;
     }
 
-    public void sendMessageToAdyacentAses( Message message ) {
+    private void sendMessageToAdyacentAses( Message message ) {
         for (As as : adyacentAses) {
-            if(!message.getReadBy_Ases().contains(as)) {
+            if(!message.isAlreadyReadBy(as)) {
                 as.receiveMessage(message);
             }
         }
