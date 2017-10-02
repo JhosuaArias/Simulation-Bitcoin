@@ -22,13 +22,14 @@ public class Miner {
         return false;
     }
 
-    public As getAsFather() {
-        return asFather;
-    }
+
 
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------
+    public As getAsFather() {
+        return asFather;
+    }
 
     public void setAsFather(As asFather) {
         this.asFather = asFather;

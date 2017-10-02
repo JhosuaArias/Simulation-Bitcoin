@@ -3,6 +3,7 @@ package Node;
 import Node.MessageProtocol.GeneralNode;
 import Node.MessageProtocol.Message;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class As extends GeneralNode {
@@ -13,6 +14,7 @@ public class As extends GeneralNode {
     //------------------------------------------------------------------------------
 
     private HashMap<String, Miner> connectedMiners;
+    private ArrayList<As> adyacentAses;
     private int as_Id;
     private boolean simulationFinished;
 
@@ -20,19 +22,26 @@ public class As extends GeneralNode {
 
     /**
      * Constructor of the class
-     * @param as_Id
+     * @param as_Id the as's id
      */
     public As( int as_Id ) {
         super();
+        this.connectedMiners = new HashMap<>();
+        this.adyacentAses = new ArrayList<>();
         this.as_Id = as_Id;
     }
 
     /**
      * Register a new inner node in the AS's nodes map
-     * @param miner
+     * @param miner the new miner
      */
     public void registerNewInnerNode (Miner miner) {
         this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
+    }
+
+
+    public void registerAdyacentAs(As as) {
+        this.adyacentAses.add(as);
     }
 
     /**
@@ -46,7 +55,7 @@ public class As extends GeneralNode {
 
             synchronized (this) {
                 try {
-                    System.out.println("AS: Waiting for message...");
+                    System.out.println("AS id: "+ as_Id+ " Waiting for message...");
                     wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -60,17 +69,17 @@ public class As extends GeneralNode {
             }
 
         }
-        System.out.println("AS: Ending AS process...");
+        System.out.println("AS id: "+ as_Id+ "  Ending AS process...");
     }
 
     @Override
     public synchronized void receiveMessage (Message message) {
-        System.out.println("AS: Message received...");
+        System.out.println("AS id: "+ as_Id+ "  Message received...");
         super.receiveMessage(message);
     }
 
-    public void handleMessage (Message message) {
-        System.out.println("AS: Reading new message...");
+    private void handleMessage (Message message) {
+        System.out.println("AS id: "+ as_Id+ "   Reading new message...");
 
         this.simulationFinished = message.isSimulationFinished();
         message.newRead(this);
@@ -84,8 +93,13 @@ public class As extends GeneralNode {
         return false;
     }
 
-    public boolean sendMessageToAdyacentAses( Message message ) {
-        return false;
+    private void sendMessageToAdyacentAses( Message message ) {
+        for (As as : adyacentAses) {
+            if(!message.isAlreadyReadBy(as)) {
+                as.receiveMessage(message);
+            }
+        }
+        //return false;
     }
 
     //------------------------------------------------------------------------------
