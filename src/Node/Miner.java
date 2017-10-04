@@ -17,6 +17,7 @@ public class Miner extends GeneralNode {
 
     /*Constructor*/
     public Miner(As asFather, int miner_Id) {
+        super();
         this.setAsFather(asFather);
         this.miner_Id = miner_Id;
     }
@@ -35,6 +36,7 @@ public class Miner extends GeneralNode {
         }
         blockChain.add(miningBlock);
         Message message = new Message(false,false, this.blockChain,this);
+        this.informToAs(message);
     }
 
     //------------------------------------------------------------------------------
