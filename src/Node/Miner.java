@@ -1,9 +1,13 @@
 package Node;
 
+import java.util.Random;
 import java.util.Stack;
 import Blockchain.Block;
+import Node.MessageProtocol.GeneralNode;
+import Node.MessageProtocol.Message;
+import Simulation.Simulation;
 
-public class Miner {
+public class Miner extends GeneralNode {
 
     /*Attributes*/
     private As asFather;
@@ -18,11 +22,20 @@ public class Miner {
     }
 
     /*Methods*/
-    private boolean informToAs() {
-        return false;
+    private void informToAs(Message message) {
+        this.asFather.receiveMessage(message);
     }
 
 
+    private void blockMining(int block_id) {
+        Random random = new Random();
+        Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
+        while(random.nextInt(9999) != Simulation.globalProbability) {
+
+        }
+        blockChain.add(miningBlock);
+        Message message = new Message(false,false, this.blockChain,this);
+    }
 
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section

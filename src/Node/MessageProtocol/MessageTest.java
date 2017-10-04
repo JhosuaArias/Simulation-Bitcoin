@@ -7,7 +7,7 @@ public class MessageTest {
 
 
     public static void main(String[] args) {
-        Simulation sim = new Simulation();
+        Simulation sim = new Simulation(123);
         sim.createNetWork();
         for (As as: sim.getAllAses()) {
             as.start();

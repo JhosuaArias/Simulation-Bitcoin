@@ -20,7 +20,7 @@ public class Message {
     private Miner sourceMiner;
     private List<As> readBy_Ases;
 
-    private Block propagatedBlock;
+    private List<Block> propagatedBlock;
 
     //------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class Message {
      * @param simulationStarted
      * @param propagatedBlock
      */
-    public Message(boolean simulationFinished, boolean simulationStarted, Block propagatedBlock, Miner sourceMiner) {
+    public Message(boolean simulationFinished, boolean simulationStarted, List<Block> propagatedBlock, Miner sourceMiner) {
         this.simulationFinished = simulationFinished;
         this.simulationStarted = simulationStarted;
         this.propagatedBlock = propagatedBlock;
@@ -58,7 +58,7 @@ public class Message {
         return simulationStarted;
     }
 
-    public Block getPropagatedBlock() {
+    public List<Block> getPropagatedBlock() {
         return propagatedBlock;
     }
 

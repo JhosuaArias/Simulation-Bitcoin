@@ -10,10 +10,12 @@ public class Simulation {
     private ArrayList<Miner> allMiners;
     private ArrayList<As> allAses;
 
+    public static int globalProbability;
     /*Constructor*/
-    public Simulation() {
-        allMiners = new ArrayList<Miner>();
-        allAses = new ArrayList<As>();
+    public Simulation(int globalProbability) {
+        this.allMiners = new ArrayList<Miner>();
+        this.allAses = new ArrayList<As>();
+        this.globalProbability = globalProbability;
     }
 
 

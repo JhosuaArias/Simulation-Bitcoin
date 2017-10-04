@@ -5,6 +5,7 @@ import Node.MessageProtocol.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class As extends GeneralNode {
 
@@ -89,8 +90,9 @@ public class As extends GeneralNode {
         sendMessageToAdyacentAses(message);
     }
 
-    public boolean sendMessageToInnerNodes( Message message ) {
-        return false;
+    public void sendMessageToInnerNodes( Message message ) {
+
+ 
     }
 
     private void sendMessageToAdyacentAses( Message message ) {
