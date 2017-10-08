@@ -77,4 +77,8 @@ public class Message {
     public List<As> getReadBy_Ases() {
         return readBy_Ases;
     }
+
+    public void setPropagatedBlock(List<Block> propagatedBlock) {
+        this.propagatedBlock = propagatedBlock;
+    }
 }

@@ -1,5 +1,6 @@
 package Node;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import Blockchain.Block;
@@ -12,9 +13,10 @@ public class Miner extends GeneralNode {
     /*Attributes*/
     private As asFather;
     private double actualCurrency;
-    private Stack<Block> blockChain;
+    private Stack<Block> blockChain; /*A lo mejor esto es volatile tambien*/
     private int miner_Id;
     private int currentBlockId;
+    private volatile boolean messageFlag;
     /*Constructor*/
     public Miner(As asFather, int miner_Id) {
         super();
@@ -22,6 +24,7 @@ public class Miner extends GeneralNode {
         this.setAsFather(asFather);
         this.miner_Id = miner_Id;
         this.currentBlockId = 0;
+        this.messageFlag = false;
     }
 
     /*Methods*/
@@ -30,7 +33,7 @@ public class Miner extends GeneralNode {
     }
 
 
-    private void blockMining(int block_id) {
+    private synchronized void  blockMining(int block_id) {
         Random random = new Random();
         if(random.nextInt(124) == Simulation.globalProbability) {
             Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
@@ -53,9 +56,26 @@ public class Miner extends GeneralNode {
     @Override
     public synchronized void receiveMessage (Message message) {
         System.out.println("Miner id: "+ miner_Id + "  Message received...");
-        super.receiveMessage(message);
+        this.messageQueue.add(message);
+        /**super.receiveMessage(message);**/
+        this.handleMessage(message);
     }
 
+    public synchronized void handleMessage(Message message) {
+        if(message.getPropagatedBlock().size() != this.blockChain.size()) {
+            this.messageFlag = true;
+        } else {
+            List<Block> messageBlockchain = message.getPropagatedBlock();
+            Block lastMessageBlock = messageBlockchain.get(messageBlockchain.size()-1);
+            Block lastMinerBlock = this.blockChain.get(this.blockChain.size()-1);
+            if(lastMessageBlock.getNodeId() > lastMinerBlock.getNodeId()) {
+
+            }
+        }
+        //TODO Ver cuales condiciones son para empezar a minar otro bloque, o seguir minando el mismo bloque
+        /** Quizá la mierda puede salir sin el flag, como los métodos son synch el mae no va a entrar si se está revisando un mensaje... lo que s epuede hacer es cambiar
+         *  el currentBlockid y el blockChain en cuyo caso sea necesario, mientras que el mae en run va minando a cada rato**/
+    }
     @Override
     public void run() {
         while (true) {

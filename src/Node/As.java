@@ -95,7 +95,7 @@ public class As extends GeneralNode {
         for (Miner miner: connectedMiners) {
             if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
                 new Thread(() -> {
-                    miner.receiveMessage(message);// Insert some method call here.
+                    miner.receiveMessage(message);
                 }).start();
 
             }
