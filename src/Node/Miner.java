@@ -50,8 +50,10 @@ public class Miner extends GeneralNode {
         }
     }
 
-    private void listenToMessage() {
-
+    @Override
+    public synchronized void receiveMessage (Message message) {
+        System.out.println("Miner id: "+ miner_Id + "  Message received...");
+        super.receiveMessage(message);
     }
 
     @Override
@@ -59,7 +61,7 @@ public class Miner extends GeneralNode {
         while (true) {
             try {
                 this.blockMining(currentBlockId);
-                this.listenToMessage();
+                //this.receiveMessage();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -14,7 +14,7 @@ public class As extends GeneralNode {
     //  Attributes
     //------------------------------------------------------------------------------
 
-    private HashMap<String, Miner> connectedMiners;
+    private ArrayList<Miner> connectedMiners;
     private ArrayList<As> adyacentAses;
     private int as_Id;
     private boolean simulationFinished;
@@ -27,7 +27,7 @@ public class As extends GeneralNode {
      */
     public As( int as_Id ) {
         super();
-        this.connectedMiners = new HashMap<>();
+        this.connectedMiners = new ArrayList<>();
         this.adyacentAses = new ArrayList<>();
         this.as_Id = as_Id;
     }
@@ -37,7 +37,7 @@ public class As extends GeneralNode {
      * @param miner the new miner
      */
     public void registerNewInnerNode (Miner miner) {
-        this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
+        this.connectedMiners.add(miner);
         miner.start();
     }
 
@@ -92,7 +92,14 @@ public class As extends GeneralNode {
     }
 
     public void sendMessageToInnerNodes( Message message ) {
+        for (Miner miner: connectedMiners) {
+            if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
+                new Thread(() -> {
+                    miner.receiveMessage(message);// Insert some method call here.
+                }).start();
 
+            }
+        }
  
     }
 
@@ -109,7 +116,7 @@ public class As extends GeneralNode {
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------
 
-    public HashMap<String, Miner> getConnectedMiners() {
+    public ArrayList<Miner> getConnectedMiners() {
         return connectedMiners;
     }
 
