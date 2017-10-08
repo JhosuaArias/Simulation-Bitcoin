@@ -24,9 +24,9 @@ public class MessageTest {
                 }
             }
         }
-        Message testMessage = new Message(true, false, null, null);
+  /**      Message testMessage = new Message(true, false, null, null);
         System.out.println("System: Message Sent");
-        sim.getAllAses().get(0).receiveMessage(testMessage);
+        sim.getAllAses().get(0).receiveMessage(testMessage);**/
     }
 
 }

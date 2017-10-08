@@ -38,6 +38,7 @@ public class As extends GeneralNode {
      */
     public void registerNewInnerNode (Miner miner) {
         this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
+        miner.start();
     }
 
 

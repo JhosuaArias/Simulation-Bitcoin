@@ -14,12 +14,14 @@ public class Miner extends GeneralNode {
     private double actualCurrency;
     private Stack<Block> blockChain;
     private int miner_Id;
-
+    private int currentBlockId;
     /*Constructor*/
     public Miner(As asFather, int miner_Id) {
         super();
+        this.blockChain = new Stack<Block>();
         this.setAsFather(asFather);
         this.miner_Id = miner_Id;
+        this.currentBlockId = 0;
     }
 
     /*Methods*/
@@ -30,14 +32,41 @@ public class Miner extends GeneralNode {
 
     private void blockMining(int block_id) {
         Random random = new Random();
-        Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
-        while(random.nextInt(9999) != Simulation.globalProbability) {
+        if(random.nextInt(124) == Simulation.globalProbability) {
+            Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
 
+            blockChain.add(miningBlock);
+            Message message = new Message(false,false, this.blockChain,this);
+            this.informToAs(message);
+            System.out.println("Ya sali mama: "+ this.miner_Id);
         }
-        blockChain.add(miningBlock);
-        Message message = new Message(false,false, this.blockChain,this);
-        this.informToAs(message);
+        else {
+            System.out.println("No salí mama: "+ this.miner_Id);
+        }
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+
+    private void listenToMessage() {
+
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                this.blockMining(currentBlockId);
+                this.listenToMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section
