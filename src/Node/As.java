@@ -78,6 +78,7 @@ public class As extends GeneralNode {
     public synchronized void receiveMessage (Message message) {
         System.out.println("AS id: "+ as_Id+ "  Message received...");
         super.receiveMessage(message);
+        this.notify();
     }
 
     private void handleMessage (Message message) {
@@ -94,10 +95,7 @@ public class As extends GeneralNode {
     public void sendMessageToInnerNodes( Message message ) {
         for (Miner miner: connectedMiners) {
             if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
-                new Thread(() -> {
-                    miner.receiveMessage(message);
-                }).start();
-
+                miner.receiveMessage(message);
             }
         }
  
