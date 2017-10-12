@@ -17,7 +17,6 @@ public class As extends GeneralNode {
     private ArrayList<Miner> connectedMiners;
     private ArrayList<As> adyacentAses;
     private int as_Id;
-    private boolean simulationFinished;
 
     //------------------------------------------------------------------------------
 
@@ -53,7 +52,7 @@ public class As extends GeneralNode {
     public void run () {
         super.ready = true;
 
-        while (!this.simulationFinished) {
+        while (!super.simulationFinished) {
 
             synchronized (this) {
                 try {
@@ -92,11 +91,20 @@ public class As extends GeneralNode {
         sendMessageToAdyacentAses(message);
     }
 
-    public void sendMessageToInnerNodes( Message message ) {
-        for (Miner miner: connectedMiners) {
-            if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
+    private void sendMessageToInnerNodes( Message message ) {
+        //If there is a specified miner
+        if (message.getSourceMiner() != null) {
+            for (Miner miner : connectedMiners) {
+                if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
+                    miner.receiveMessage(message);
+                }
+            }
+        } else {
+            //If there isn't a miner
+            for (Miner miner : connectedMiners) {
                 miner.receiveMessage(message);
             }
+
         }
  
     }

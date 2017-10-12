@@ -1,6 +1,5 @@
 package Node;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import Blockchain.Block;
@@ -36,17 +35,19 @@ public class Miner extends GeneralNode {
         if(random.nextInt(124) == Simulation.globalProbability) {
             Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
 
+            System.out.println("Block " + this.currentBlockId + " have been mined by "+ this.miner_Id);
             blockChain.add(miningBlock);
+            this.currentBlockId++;
+
             Message message = new Message(false,false, this.blockChain,this);
             this.informToAs(message);
-            System.out.println("Block " + this.currentBlockId + " have been mined by "+ this.miner_Id);
-            this.currentBlockId++;
         }
         else {
             System.out.println("Block "+ this.currentBlockId + " is being mined by " + this.miner_Id);
         }
+
         try {
-            Thread.sleep(2500);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -59,27 +60,33 @@ public class Miner extends GeneralNode {
     }
 
     private void handleMessage(Message message) {
-        if(message.getPropagatedBlock().size() > this.blockChain.size()) {
-            this.blockChain= message.getPropagatedBlock();
-            this.currentBlockId = blockChain.peek().getBlockId()+1;
+
+        this.simulationFinished = message.isSimulationFinished();
+
+        if (message.getPropagatedBlockChain() != null) {
+
+            if (message.getPropagatedBlockChain().size() > this.blockChain.size()) {
+                this.blockChain = (Stack<Block>) message.getPropagatedBlockChain().clone();
+                this.currentBlockId = blockChain.peek().getBlockId() + 1;
+            }
+
         }
-        //TODO Ver cuales condiciones son para empezar a minar otro bloque, o seguir minando el mismo bloque
-        /** Quizá la mierda puede salir sin el flag, como los métodos son synch el mae no va a entrar si se está revisando un mensaje... lo que s epuede hacer es cambiar
-         *  el currentBlockid y el blockChain en cuyo caso sea necesario, mientras que el mae en run va minando a cada rato**/
     }
     @Override
     public void run() {
-        while (true) {
+        while (!super.simulationFinished) {
             synchronized (this) {
                 try {
                     wait(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
                 while (!this.messageQueue.isEmpty()) {
                     Message currMessage = this.messageQueue.poll();
                     this.handleMessage(currMessage);
                 }
+
                 this.blockMining(this.currentBlockId);
             }
         }
