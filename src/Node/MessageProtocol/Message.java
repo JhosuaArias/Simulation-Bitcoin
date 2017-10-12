@@ -6,6 +6,7 @@ import Node.Miner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Message {
 
@@ -20,7 +21,7 @@ public class Message {
     private Miner sourceMiner;
     private List<As> readBy_Ases;
 
-    private Block propagatedBlock;
+    private Stack<Block> propagatedBlockChain;
 
     //------------------------------------------------------------------------------
 
@@ -30,10 +31,10 @@ public class Message {
      * @param simulationStarted
      * @param propagatedBlock
      */
-    public Message(boolean simulationFinished, boolean simulationStarted, Block propagatedBlock, Miner sourceMiner) {
+    public Message(boolean simulationFinished, boolean simulationStarted, Stack<Block> propagatedBlock, Miner sourceMiner) {
         this.simulationFinished = simulationFinished;
         this.simulationStarted = simulationStarted;
-        this.propagatedBlock = propagatedBlock;
+        this.propagatedBlockChain = propagatedBlock;
         this.sourceMiner = sourceMiner;
         this.readBy_Ases = new ArrayList<>();
     }
@@ -58,8 +59,8 @@ public class Message {
         return simulationStarted;
     }
 
-    public Block getPropagatedBlock() {
-        return propagatedBlock;
+    public Stack<Block> getPropagatedBlock() {
+        return propagatedBlockChain;
     }
 
     public boolean isFromInnerNode() {
@@ -76,5 +77,9 @@ public class Message {
 
     public List<As> getReadBy_Ases() {
         return readBy_Ases;
+    }
+
+    public void setPropagatedBlock(Stack<Block> propagatedBlock) {
+        this.propagatedBlockChain = propagatedBlock;
     }
 }

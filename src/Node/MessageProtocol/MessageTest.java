@@ -7,7 +7,7 @@ public class MessageTest {
 
 
     public static void main(String[] args) {
-        Simulation sim = new Simulation();
+        Simulation sim = new Simulation(123);
         sim.createNetWork();
         for (As as: sim.getAllAses()) {
             as.start();
@@ -24,9 +24,9 @@ public class MessageTest {
                 }
             }
         }
-        Message testMessage = new Message(true, false, null, null);
+  /**      Message testMessage = new Message(true, false, null, null);
         System.out.println("System: Message Sent");
-        sim.getAllAses().get(0).receiveMessage(testMessage);
+        sim.getAllAses().get(0).receiveMessage(testMessage);**/
     }
 
 }

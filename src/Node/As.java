@@ -5,6 +5,7 @@ import Node.MessageProtocol.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class As extends GeneralNode {
 
@@ -13,7 +14,7 @@ public class As extends GeneralNode {
     //  Attributes
     //------------------------------------------------------------------------------
 
-    private HashMap<String, Miner> connectedMiners;
+    private ArrayList<Miner> connectedMiners;
     private ArrayList<As> adyacentAses;
     private int as_Id;
     private boolean simulationFinished;
@@ -26,7 +27,7 @@ public class As extends GeneralNode {
      */
     public As( int as_Id ) {
         super();
-        this.connectedMiners = new HashMap<>();
+        this.connectedMiners = new ArrayList<>();
         this.adyacentAses = new ArrayList<>();
         this.as_Id = as_Id;
     }
@@ -36,7 +37,8 @@ public class As extends GeneralNode {
      * @param miner the new miner
      */
     public void registerNewInnerNode (Miner miner) {
-        this.connectedMiners.put( Integer.toString(miner.getMiner_Id()), miner);
+        this.connectedMiners.add(miner);
+        miner.start();
     }
 
 
@@ -76,6 +78,7 @@ public class As extends GeneralNode {
     public synchronized void receiveMessage (Message message) {
         System.out.println("AS id: "+ as_Id+ "  Message received...");
         super.receiveMessage(message);
+        this.notify();
     }
 
     private void handleMessage (Message message) {
@@ -89,8 +92,13 @@ public class As extends GeneralNode {
         sendMessageToAdyacentAses(message);
     }
 
-    public boolean sendMessageToInnerNodes( Message message ) {
-        return false;
+    public void sendMessageToInnerNodes( Message message ) {
+        for (Miner miner: connectedMiners) {
+            if (miner.getMiner_Id() != message.getSourceMiner().getMiner_Id()) {
+                miner.receiveMessage(message);
+            }
+        }
+ 
     }
 
     private void sendMessageToAdyacentAses( Message message ) {
@@ -106,7 +114,7 @@ public class As extends GeneralNode {
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------
 
-    public HashMap<String, Miner> getConnectedMiners() {
+    public ArrayList<Miner> getConnectedMiners() {
         return connectedMiners;
     }
 

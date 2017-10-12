@@ -23,7 +23,6 @@ public class GeneralNode extends Thread {
 
     public synchronized void receiveMessage (Message message) {
         this.messageQueue.add(message);
-        this.notify();
     }
 
     //------------------------------------------------------------------------------

@@ -10,10 +10,12 @@ public class Simulation {
     private ArrayList<Miner> allMiners;
     private ArrayList<As> allAses;
 
+    public static int globalProbability;
     /*Constructor*/
-    public Simulation() {
-        allMiners = new ArrayList<Miner>();
-        allAses = new ArrayList<As>();
+    public Simulation(int globalProbability) {
+        this.allMiners = new ArrayList<Miner>();
+        this.allAses = new ArrayList<As>();
+        this.globalProbability = globalProbability;
     }
 
 
@@ -26,7 +28,7 @@ public class Simulation {
     public void createNetWork() {
         for (int i = 0; i < 10 ; i++) {
             As as = new As(i);
-            for (int j = 0; j < 50 ; j++) {
+            for (int j = 0; j < 1 ; j++) {
                 Miner miner = new Miner(as,(100*(i+1))+j);
                 as.registerNewInnerNode(miner);
                 allMiners.add(miner);
