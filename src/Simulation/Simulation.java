@@ -147,21 +147,53 @@ public class Simulation {
 
         this.globalProbability = (numberAS * numberNodes) * 3;
 
-        for (int i = 0; i < numberAS ; i++) {
+        int option = 0;
+        int asOption = -1;
+        try {
+            System.out.print("Do you want to make an partition attack( Press 1 for yes, otrherwise for no): ");
+            option = Integer.parseInt(keyboard.nextLine());
+
+            if (option == 1) {
+                System.out.print("Please enter a number of the isolated As: ");
+                asOption = Integer.parseInt(keyboard.nextLine());
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("The attack will not be executed ");
+            asOption = -1;
+            option = -1;
+        }
+
+        for (int i = 0; i < numberAS; i++) {
             As as = new As(i);
-            for (int j = 0; j < numberNodes ; j++) {
-                Miner miner = new Miner(as,(100*(i+1))+j);
+            for (int j = 0; j < numberNodes; j++) {
+                Miner miner = new Miner(as, (100 * (i + 1)) + j);
                 as.registerNewInnerNode(miner);
                 allMiners.add(miner);
             }
             allAses.add(as);
         }
 
-        for (int i = 0; i < numberAS ; i++) {
-            allAses.get(i).registerAdyacentAs(allAses.get(((i+1)%numberAS)));
+        for (int i = 0; i < numberAS; i++) {
+            allAses.get(i).registerAdjacentAs(allAses.get(((i + 1) % numberAS)));
+        }
+
+        if(option == 1 && asOption != -1) {
+            this.simulatePartitionAttack(this.allAses.get(asOption));
+        }
+
+    }
+
+
+    //TODO Simulate attack
+    private void simulatePartitionAttack(As isolatedAs) {
+        for (As indexAs: this.allAses) {
+            if(indexAs != isolatedAs && indexAs.getAdjacentAses().contains(isolatedAs)) {
+                indexAs.removeAdjacentAs(isolatedAs);
+            }
         }
     }
 
+    //TODO Statistics
     /*Getters and Setters*/
 
     public ArrayList<Miner> getAllMiners() {

@@ -15,7 +15,7 @@ public class As extends GeneralNode {
     //------------------------------------------------------------------------------
 
     private ArrayList<Miner> connectedMiners;
-    private ArrayList<As> adyacentAses;
+    private ArrayList<As> adjacentAses;
     private int as_Id;
 
     //------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ public class As extends GeneralNode {
     public As( int as_Id ) {
         super();
         this.connectedMiners = new ArrayList<>();
-        this.adyacentAses = new ArrayList<>();
+        this.adjacentAses = new ArrayList<>();
         this.as_Id = as_Id;
     }
 
@@ -40,11 +40,14 @@ public class As extends GeneralNode {
         miner.start();
     }
 
-
-    public void registerAdyacentAs(As as) {
-        this.adyacentAses.add(as);
+    public void registerAdjacentAs(As as) {
+        this.adjacentAses.add(as);
+        as.getAdjacentAses().add(this);
     }
 
+    public void removeAdjacentAs(As as) {
+        this.adjacentAses.remove(as);
+    }
     /**
      * Runnable Method
      */
@@ -110,7 +113,7 @@ public class As extends GeneralNode {
     }
 
     private void sendMessageToAdyacentAses( Message message ) {
-        for (As as : adyacentAses) {
+        for (As as : adjacentAses) {
             if(!message.isAlreadyReadBy(as)) {
                 as.receiveMessage(message);
             }
@@ -130,4 +133,11 @@ public class As extends GeneralNode {
         return as_Id;
     }
 
+    public ArrayList<As> getAdjacentAses() {
+        return adjacentAses;
+    }
+
+    public void setAdjacentAses(ArrayList<As> adjacentAses) {
+        this.adjacentAses = adjacentAses;
+    }
 }

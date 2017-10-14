@@ -32,7 +32,7 @@ public class Miner extends GeneralNode {
 
     private synchronized void  blockMining(int block_id) {
         Random random = new Random();
-        if(random.nextInt(124) == Simulation.globalProbability) {
+        if(random.nextInt(Simulation.globalProbability) == Simulation.globalProbability-1) {
             Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
 
             System.out.println("Block " + this.currentBlockId + " have been mined by "+ this.miner_Id);
