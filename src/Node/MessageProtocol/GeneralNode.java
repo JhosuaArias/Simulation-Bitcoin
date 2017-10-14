@@ -11,6 +11,7 @@ public class GeneralNode extends Thread {
 
     protected Queue<Message> messageQueue;
     protected boolean ready;
+    protected boolean simulationFinished;
 
     //------------------------------------------------------------------------------
 

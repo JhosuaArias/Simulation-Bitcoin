@@ -59,7 +59,7 @@ public class Message {
         return simulationStarted;
     }
 
-    public Stack<Block> getPropagatedBlock() {
+    public Stack<Block> getPropagatedBlockChain() {
         return propagatedBlockChain;
     }
 
@@ -75,11 +75,7 @@ public class Message {
         return sourceMiner;
     }
 
-    public List<As> getReadBy_Ases() {
-        return readBy_Ases;
-    }
-
-    public void setPropagatedBlock(Stack<Block> propagatedBlock) {
+    public void setPropagatedBlockChain(Stack<Block> propagatedBlock) {
         this.propagatedBlockChain = propagatedBlock;
     }
 }
