@@ -2,38 +2,48 @@ package Simulation;
 
 import Blockchain.Block;
 import Node.As;
-import Node.MessageProtocol.Message;
 import Node.Miner;
-import org.omg.CORBA.INTERNAL;
 
 import java.util.*;
 
 public class Simulation {
     /*Attributes*/
     private ArrayList<Miner> allMiners;
-    private ArrayList<As> allAses;
+    private ArrayList<As> allASes;
 
     private int simulationTime;
+    private boolean thereIsAttack;
+    private int victimAS;
+
+    private Scanner keyboard;
 
     public static int globalProbability;
     /*Constructor*/
     public Simulation() {
         this.allMiners = new ArrayList<>();
-        this.allAses = new ArrayList<>();
+        this.allASes = new ArrayList<>();
+        this.keyboard = new Scanner(System.in);
     }
 
 
 
     /*Methods*/
     public void initSimulation() {
+
         this.createNetWork();
-        for (As as: this.getAllAses()) {
+
+        if(this.thereIsAttack) {
+            System.out.println("Initializing attack...");
+            this.simulatePartitionAttack(this.allASes.get(victimAS));
+        }
+
+        // Start the ASes
+        for (As as: this.allASes) {
             as.start();
         }
 
         System.out.println("System: Waiting for nodes to be created...");
-
-        for (As as: this.getAllAses()) {
+        for (As as: this.allASes) {
             while (!as.isReady()) {
                 try {
                     Thread.sleep(100);
@@ -44,16 +54,22 @@ public class Simulation {
         }
 
         try {
-            Thread.sleep(this.simulationTime * 60000);
+            Thread.sleep((this.simulationTime * 60000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        //Send end simulation message
-        this.allAses.get(0).receiveMessage(new Message(true, false, null, null));
+        //End everything
+        for (Miner miner : this.allMiners) {
+            miner.setSimulationFinished(true);
+        }
+
+        for (As as : this.allASes) {
+            as.setSimulationFinished(true);
+            as.wakeUp();
+        }
 
         //Wait for everything to stop
-        System.out.println("Waiting for everyone to stop...");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -77,7 +93,7 @@ public class Simulation {
 
         }
 
-        float[] incomePerAS = new float[this.allAses.size()];
+        float[] incomePerAS = new float[this.allASes.size()];
 
         for (Block block : biggestBlockChain) {
             incomePerAS[block.getAsId()] += 12.5;
@@ -90,9 +106,125 @@ public class Simulation {
 
     }
 
-    public void createNetWork() {
-        Scanner keyboard = new Scanner(System.in);
+    private void createNetWork() {
 
+        requestSimulationTime();
+        int totalASes = requestNumberASes();
+        int totalNodes = requestNumberNodes();
+
+        requestAttack();
+        if (this.thereIsAttack) {
+            requestVictimAS(totalASes);
+        }
+
+        globalProbability = (totalASes * totalNodes) * 3;
+
+        for (int i = 0; i < totalASes; i++) {
+
+            As as = new As(i);
+            for (int j = 0; j < totalNodes; j++) {
+
+                Miner miner = new Miner(as, "" + i + "-"+ j);
+                as.registerNewInnerNode(miner.getMinerListener());
+                this.allMiners.add(miner);
+
+            }
+
+            this.allASes.add(as);
+        }
+
+        //Register the ASes in a ring like matter, bidirectionally
+        for (int i = 0; i < totalASes; i++) {
+            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + 1) % totalASes))); // Right relation
+            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + totalASes - 1) % totalASes))); //Left relation
+        }
+
+    }
+
+    private void requestVictimAS(int totalASes) {
+        do {
+
+            try {
+                System.out.print("Please enter the AS number you want to isolate (between 1 - " + totalASes + "): ");
+                this.victimAS = Integer.parseInt(keyboard.nextLine());
+
+                if (this.victimAS <= 0 || this.victimAS > totalASes) {
+                    System.out.println("Please enter a number, from 1 to "+ totalASes +".");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+                this.victimAS = -1;
+            }
+
+
+        } while (this.victimAS <= 0 || this.victimAS > totalASes);
+
+        this.victimAS--; //Because the IDs start at 0
+
+    }
+
+    private void requestAttack() {
+        String userChoice;
+
+        do {
+            System.out.print("Do you want to make an partition attack [y/n]: ");
+            userChoice = keyboard.nextLine();
+
+            if (!userChoice.equals("y") && !userChoice.equals("n")) {
+                System.out.println("Please enter a valid option...");
+            }
+
+        } while (!userChoice.equals("y") && !userChoice.equals("n"));
+
+        this.thereIsAttack = userChoice.equals("y");
+    }
+
+    private int requestNumberNodes() {
+        int numberNodes;
+        do {
+
+            try {
+                System.out.print("Please enter the number of nodes you want: ");
+                numberNodes = Integer.parseInt(keyboard.nextLine());
+
+                if (numberNodes <= 0 || numberNodes > 50) {
+                    System.out.println("Please enter a number, from 1 to 50.");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+                numberNodes = -1;
+            }
+
+
+        } while (numberNodes <= 0 || numberNodes > 50);
+
+        return numberNodes;
+    }
+
+    private int requestNumberASes() {
+        int numberAS;
+        do {
+
+            try {
+                System.out.print("Please enter the number of ASes you want: ");
+                numberAS = Integer.parseInt(keyboard.nextLine());
+
+                if (numberAS <= 0 || numberAS > 10) {
+                    System.out.println("Please enter a number, from 1 to 10.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+                numberAS = -1;
+            }
+
+        } while (numberAS <= 0 || numberAS > 10);
+
+        return numberAS;
+    }
+
+    private void requestSimulationTime() {
         do {
 
             try {
@@ -109,75 +241,19 @@ public class Simulation {
 
         } while (this.simulationTime <= 0);
 
-        int numberAS;
-        do {
+    }
 
-            try {
-                System.out.print("Please enter the number of ASes you want: ");
-                numberAS = Integer.parseInt(keyboard.nextLine());
+    private void simulatePartitionAttack(As isolatedAs) {
+        for (As indexAs: this.allASes) {
 
-                if (numberAS <= 0 || numberAS > 10) {
-                    System.out.println("Please enter a number, from 1 to 10.");
+            for (Map.Entry<As, Boolean> adjacentAs : indexAs.getAdjacentAses()) {
+                //Disables all ases of the attacked node or Disables the attacked node
+                if (indexAs == isolatedAs || adjacentAs.getKey() == isolatedAs) {
+                    adjacentAs.setValue(false);
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                numberAS = -1;
             }
 
-
-        } while (numberAS <= 0 || numberAS > 10);
-
-        int numberNodes;
-        do {
-
-            try {
-                System.out.print("Please enter the number of nodes you want: ");
-                numberNodes = Integer.parseInt(keyboard.nextLine());
-
-                if (numberNodes <= 0 || numberNodes > 50) {
-                    System.out.println("Please enter a number, from 1 to 50.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                numberNodes = -1;
-            }
-
-
-        } while (numberNodes <= 0 || numberNodes > 50);
-
-        this.globalProbability = (numberAS * numberNodes) * 3;
-
-        for (int i = 0; i < numberAS ; i++) {
-            As as = new As(i);
-            for (int j = 0; j < numberNodes ; j++) {
-                Miner miner = new Miner(as,(100*(i+1))+j);
-                as.registerNewInnerNode(miner);
-                allMiners.add(miner);
-            }
-            allAses.add(as);
         }
-
-        for (int i = 0; i < numberAS ; i++) {
-            allAses.get(i).registerAdyacentAs(allAses.get(((i+1)%numberAS)));
-        }
-    }
-
-    /*Getters and Setters*/
-
-    public ArrayList<Miner> getAllMiners() {
-        return allMiners;
-    }
-
-    public void setAllMiners(ArrayList<Miner> allMiners) {
-        this.allMiners = allMiners;
-    }
-
-    public ArrayList<As> getAllAses() {
-        return allAses;
-    }
-
-    public void setAllAses(ArrayList<As> allAses) {
-        this.allAses = allAses;
     }
 
 }

@@ -3,22 +3,22 @@ package Blockchain;
 public class Block {
     /*Attributes*/
     private int blockId;
-    private int nodeId;
+    private String nodeId;
     private int asId;
     /*Constructor*/
-    public Block(int blockId, int nodeId, int asId) {
+    public Block(int blockId, String nodeId, int asId) {
         this.blockId = blockId;
-        this.setNodeId(nodeId);
-        this.setAsId(asId);
+        this.nodeId = nodeId;
+        this.asId = asId;
     }
     /*Methods*/
 
     /*Setters and Getters*/
-    public int getNodeId() {
+    public String getNodeId() {
         return nodeId;
     }
 
-    public void setNodeId(int nodeId) {
+    public void setNodeId(String nodeId) {
         this.nodeId = nodeId;
     }
 

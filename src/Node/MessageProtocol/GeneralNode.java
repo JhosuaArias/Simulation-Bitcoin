@@ -9,7 +9,7 @@ public class GeneralNode extends Thread {
     //  Attributes
     //------------------------------------------------------------------------------
 
-    protected Queue<Message> messageQueue;
+    protected volatile Queue<Message> messageQueue;
     protected boolean ready;
     protected boolean simulationFinished;
 
@@ -22,7 +22,7 @@ public class GeneralNode extends Thread {
         this.messageQueue = new LinkedList<>();
     }
 
-    public synchronized void receiveMessage (Message message) {
+    public void receiveMessage (Message message) {
         this.messageQueue.add(message);
     }
 
@@ -32,5 +32,13 @@ public class GeneralNode extends Thread {
 
     public boolean isReady() {
         return ready;
+    }
+
+    public synchronized Queue<Message> getMessageQueue() {
+        return messageQueue;
+    }
+
+    public void setSimulationFinished(boolean simulationFinished) {
+        this.simulationFinished = simulationFinished;
     }
 }

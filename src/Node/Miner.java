@@ -11,17 +11,21 @@ public class Miner extends GeneralNode {
 
     /*Attributes*/
     private As asFather;
-    private double actualCurrency;
-    private Stack<Block> blockChain; /*A lo mejor esto es volatile tambien*/
-    private int miner_Id;
+    private Stack<Block> blockChain;
+    private String miner_Id;
     private int currentBlockId;
+    private MinerListener minerListener;
+
     /*Constructor*/
-    public Miner(As asFather, int miner_Id) {
-        super();
-        this.blockChain = new Stack<Block>();
-        this.setAsFather(asFather);
+    public Miner(As asFather, String miner_Id) {
+        this.blockChain = new Stack<>();
+        this.asFather = asFather;
         this.miner_Id = miner_Id;
         this.currentBlockId = 0;
+
+        this.minerListener= new MinerListener(miner_Id, this);
+        this.minerListener.start(); //So the listeners start listening at once
+
     }
 
     /*Methods*/
@@ -29,18 +33,21 @@ public class Miner extends GeneralNode {
         this.asFather.receiveMessage(message);
     }
 
+    private void  blockMining(int block_id) {
 
-    private synchronized void  blockMining(int block_id) {
         Random random = new Random();
-        if(random.nextInt(124) == Simulation.globalProbability) {
-            Block miningBlock = new Block(block_id, this.miner_Id,this.asFather.getAs_Id());
 
-            System.out.println("Block " + this.currentBlockId + " have been mined by "+ this.miner_Id);
-            blockChain.add(miningBlock);
+        if(random.nextInt(Simulation.globalProbability) == Simulation.globalProbability-1) {
+
+            Block miningBlock = new Block(block_id, this.miner_Id, this.asFather.getAs_Id());
+
+            System.out.println("Block " + this.currentBlockId + " has been mined by "+ this.miner_Id);
+            this.blockChain.add(miningBlock);
             this.currentBlockId++;
 
-            Message message = new Message(false,false, this.blockChain,this);
+            Message message = new Message(this.blockChain,this);
             this.informToAs(message);
+
         }
         else {
             System.out.println("Block "+ this.currentBlockId + " is being mined by " + this.miner_Id);
@@ -55,13 +62,11 @@ public class Miner extends GeneralNode {
 
     @Override
     public synchronized void receiveMessage (Message message) {
-        System.out.println("Miner id: "+ miner_Id + "  Message received...");
-        super.receiveMessage(message);
+        System.err.println("The miner itself does not receive messages, please call the listener!");
+        System.exit(1);
     }
 
     private void handleMessage(Message message) {
-
-        this.simulationFinished = message.isSimulationFinished();
 
         if (message.getPropagatedBlockChain() != null) {
 
@@ -71,58 +76,55 @@ public class Miner extends GeneralNode {
             }
 
         }
+
     }
+
     @Override
     public void run() {
-        while (!super.simulationFinished) {
-            synchronized (this) {
-                try {
-                    wait(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                while (!this.messageQueue.isEmpty()) {
-                    Message currMessage = this.messageQueue.poll();
-                    this.handleMessage(currMessage);
-                }
-
-                this.blockMining(this.currentBlockId);
-            }
+        // Wait a little time before mining
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        while (!super.simulationFinished) {
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            while (!this.minerListener.getMessageQueue().isEmpty()) {
+                Message currMessage = this.minerListener.getMessage();
+                this.handleMessage(currMessage);
+            }
+
+            this.blockMining(this.currentBlockId);
+        }
+
+
+        this.minerListener.setSimulationFinished(true);
+        System.out.println("-- Miner id: "+ this.miner_Id + " /  Ending Miner process...");
+
     }
-
-
 
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------
-    public As getAsFather() {
-        return asFather;
-    }
 
-    public void setAsFather(As asFather) {
-        this.asFather = asFather;
-    }
-
-    public double getActualCurrency() {
-        return actualCurrency;
-    }
-
-    public void setActualCurrency(double actualCurrency) {
-        this.actualCurrency = actualCurrency;
-    }
 
     public Stack<Block> getBlockChain() {
         return blockChain;
     }
 
-    public void setBlockChain(Stack<Block> blockChain) {
-        this.blockChain = blockChain;
-    }
-
-    public int getMiner_Id() {
+    public String getMiner_Id() {
         return miner_Id;
     }
 
+    public MinerListener getMinerListener() {
+        return minerListener;
+    }
 }
