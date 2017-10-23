@@ -14,8 +14,6 @@ public class Message {
     //  Attributes
     //------------------------------------------------------------------------------
 
-    private boolean simulationFinished;
-    private boolean simulationStarted;
     private boolean fromInnerNode;
 
     private Miner sourceMiner;
@@ -27,13 +25,9 @@ public class Message {
 
     /**
      * Constructor of the class
-     * @param simulationFinished
-     * @param simulationStarted
      * @param propagatedBlock
      */
-    public Message(boolean simulationFinished, boolean simulationStarted, Stack<Block> propagatedBlock, Miner sourceMiner) {
-        this.simulationFinished = simulationFinished;
-        this.simulationStarted = simulationStarted;
+    public Message(Stack<Block> propagatedBlock, Miner sourceMiner) {
         this.propagatedBlockChain = propagatedBlock;
         this.sourceMiner = sourceMiner;
         this.readBy_Ases = new ArrayList<>();
@@ -50,14 +44,6 @@ public class Message {
     //------------------------------------------------------------------------------
     //  Standard Setter and Getter section
     //------------------------------------------------------------------------------
-
-    public boolean isSimulationFinished() {
-        return simulationFinished;
-    }
-
-    public boolean isSimulationStarted() {
-        return simulationStarted;
-    }
 
     public Stack<Block> getPropagatedBlockChain() {
         return propagatedBlockChain;
