@@ -42,6 +42,7 @@ public class Miner extends GeneralNode {
             Block miningBlock = new Block(block_id, this.miner_Id, this.asFather.getAs_Id());
 
             System.out.println("Block " + this.currentBlockId + " has been mined by "+ this.miner_Id);
+            Simulation.statistics.addBlockMined(this.asFather.getAs_Id());
             this.blockChain.add(miningBlock);
             this.currentBlockId++;
 

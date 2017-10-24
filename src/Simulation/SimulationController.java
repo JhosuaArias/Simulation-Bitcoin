@@ -24,6 +24,31 @@ public class SimulationController {
 
     }
 
+    public void printStatistics() {
+        double[] totalIncomesAverage = new double[this.numberAses];
+        double[] lostIncomeAverage = new double[this.numberAses];
+
+        for (int i = 0; i < this.allSimulations.size() ; i++) {
+            for (int j = 0 ; j < this.numberAses ; j++) {
+                totalIncomesAverage[j] = lostIncomeAverage[j] + this.allSimulations.get(i).statistics.getAsesIncomeStatistics()[j];
+                lostIncomeAverage[j] = lostIncomeAverage[j] + this.allSimulations.get(i).statistics.getLostIncome()[j];
+            }
+        }
+
+        for (int i = 0; i < this.numberAses ; i++) {
+            totalIncomesAverage[i] = totalIncomesAverage[i] / this.allSimulations.size() ;
+            lostIncomeAverage[i] = lostIncomeAverage[i] / this.allSimulations.size();
+        }
+
+        for (int i = 0; i < this.numberAses; i++) {
+            System.out.println("Income average for the area of AS #" + (i+1) + " is: " + totalIncomesAverage[i] + " Bitcoins.");
+        }
+
+        for (int i = 0; i < this.numberAses; i++) {
+            System.out.println("Lost income average for the area of AS #" + (i+1) + " is: " + lostIncomeAverage[i] + " Bitcoins.");
+        }
+    }
+
 
     private void requestVictimAS(int totalASes) {
         do {
@@ -131,7 +156,7 @@ public class SimulationController {
         do {
 
             try {
-                System.out.print("Enter the number rof simulations you want to execute: ");
+                System.out.print("Enter the number of simulations you want to execute: ");
                 this.numberSimulations = Integer.parseInt(keyboard.nextLine());
 
                 if (this.numberSimulations <= 0) {
@@ -167,6 +192,7 @@ public class SimulationController {
             simulation.initSimulation();
         }
 
+        this.printStatistics();
 
     }
     public static void main(String[] args) {

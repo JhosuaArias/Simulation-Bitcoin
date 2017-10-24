@@ -25,7 +25,7 @@ public class Simulation {
     public Simulation(int numberAses, int numberMiners, boolean makeAttack, int victimAs, int simulationTime) {
         this.allMiners = new ArrayList<>();
         this.allASes = new ArrayList<>();
-        statistics = new Statistics();
+        this.statistics = new Statistics(numberAses);
 
         this.numberAses = numberAses;
         this.numberMiners = numberMiners;
@@ -88,7 +88,12 @@ public class Simulation {
 
         //Calculate the income for every AS
         this.calculateIncome();
+        this.getLostIncomesAttackedAs();
 
+    }
+
+    private void getLostIncomesAttackedAs() {
+        System.out.println("Lost income from As# " + victimAS + ": " + this.statistics.getLostIncome()[victimAS] + " bitcoins");
     }
 
     private void calculateIncome() {
@@ -102,17 +107,7 @@ public class Simulation {
             }
 
         }
-
-        float[] incomePerAS = new float[this.allASes.size()];
-
-        for (Block block : biggestBlockChain) {
-            incomePerAS[block.getAsId()] += 12.5;
-        }
-
-        System.out.println("");
-        for (int i = 0; i < incomePerAS.length; i++) {
-            System.out.println("Income for the area of AS #" + i + " is: " + incomePerAS[i] + " Bitcoins.");
-        }
+        this.statistics.calculateIncomes(biggestBlockChain);
 
     }
 
