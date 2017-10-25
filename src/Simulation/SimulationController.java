@@ -1,7 +1,5 @@
 package Simulation;
 
-import Node.As;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -30,8 +28,8 @@ public class SimulationController {
 
         for (int i = 0; i < this.allSimulations.size() ; i++) {
             for (int j = 0 ; j < this.numberAses ; j++) {
-                totalIncomesAverage[j] = lostIncomeAverage[j] + this.allSimulations.get(i).statistics.getAsesIncomeStatistics()[j];
-                lostIncomeAverage[j] = lostIncomeAverage[j] + this.allSimulations.get(i).statistics.getLostIncome()[j];
+                totalIncomesAverage[j] = totalIncomesAverage[j] + this.allSimulations.get(i).getStatistics().getAsesIncomeStatistics()[j];
+                lostIncomeAverage[j] = lostIncomeAverage[j] + this.allSimulations.get(i).getStatistics().getLostIncome()[j];
             }
         }
 
@@ -190,6 +188,12 @@ public class SimulationController {
 
         for (Simulation simulation: this.allSimulations) {
             simulation.initSimulation();
+            System.out.println("Waiting...");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         this.printStatistics();

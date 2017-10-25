@@ -15,9 +15,11 @@ public class Miner extends GeneralNode {
     private String miner_Id;
     private int currentBlockId;
     private MinerListener minerListener;
+    Simulation simulation;
 
     /*Constructor*/
-    public Miner(As asFather, String miner_Id) {
+    public Miner(Simulation simulation, As asFather, String miner_Id) {
+        this.simulation = simulation;
         this.blockChain = new Stack<>();
         this.asFather = asFather;
         this.miner_Id = miner_Id;
@@ -42,7 +44,7 @@ public class Miner extends GeneralNode {
             Block miningBlock = new Block(block_id, this.miner_Id, this.asFather.getAs_Id());
 
             System.out.println("Block " + this.currentBlockId + " has been mined by "+ this.miner_Id);
-            Simulation.statistics.addBlockMined(this.asFather.getAs_Id());
+            this.simulation.getStatistics().addBlockMined(this.asFather.getAs_Id());
             this.blockChain.add(miningBlock);
             this.currentBlockId++;
 

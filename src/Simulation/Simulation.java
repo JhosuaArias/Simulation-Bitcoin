@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Simulation {
     /*Attributes*/
-    public static Statistics statistics;
+    private Statistics statistics;
 
     private ArrayList<Miner> allMiners;
     private ArrayList<As> allASes;
@@ -93,7 +93,7 @@ public class Simulation {
     }
 
     private void getLostIncomesAttackedAs() {
-        System.out.println("Lost income from As# " + victimAS + ": " + this.statistics.getLostIncome()[victimAS] + " bitcoins");
+        System.out.println("Lost income from As# " + (victimAS+1) + ": " + this.statistics.getLostIncome()[victimAS] + " bitcoins");
     }
 
     private void calculateIncome() {
@@ -118,7 +118,7 @@ public class Simulation {
             As as = new As(i);
             for (int j = 0; j < numberMiners; j++) {
 
-                Miner miner = new Miner(as, "" + i + "-"+ j);
+                Miner miner = new Miner(this, as, "" + i + "-"+ j);
                 as.registerNewInnerNode(miner.getMinerListener());
                 this.allMiners.add(miner);
 
@@ -150,4 +150,11 @@ public class Simulation {
         }
     }
 
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
+    }
 }
