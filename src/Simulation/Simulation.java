@@ -8,23 +8,33 @@ import java.util.*;
 
 public class Simulation {
     /*Attributes*/
+    private Statistics statistics;
+
     private ArrayList<Miner> allMiners;
     private ArrayList<As> allASes;
 
-    private int simulationTime;
+    public static int globalProbability;
+
+    private int numberAses;
+    private int numberMiners;
     private boolean thereIsAttack;
     private int victimAS;
-
-    private Scanner keyboard;
-
-    public static int globalProbability;
+    private int simulationTime;
     /*Constructor*/
-    public Simulation() {
+
+    public Simulation(int numberAses, int numberMiners, boolean makeAttack, int victimAs, int simulationTime) {
         this.allMiners = new ArrayList<>();
         this.allASes = new ArrayList<>();
-        this.keyboard = new Scanner(System.in);
-    }
+        this.statistics = new Statistics(numberAses);
 
+        this.numberAses = numberAses;
+        this.numberMiners = numberMiners;
+        this.thereIsAttack = makeAttack;
+        this.victimAS = victimAs;
+        this.simulationTime = simulationTime;
+
+        globalProbability = (numberAses * numberMiners) * 3;
+    }
 
 
     /*Methods*/
@@ -78,7 +88,12 @@ public class Simulation {
 
         //Calculate the income for every AS
         this.calculateIncome();
+        this.getLostIncomesAttackedAs();
 
+    }
+
+    private void getLostIncomesAttackedAs() {
+        System.out.println("Lost income from As# " + (victimAS+1) + ": " + this.statistics.getLostIncome()[victimAS] + " bitcoins");
     }
 
     private void calculateIncome() {
@@ -92,39 +107,18 @@ public class Simulation {
             }
 
         }
-
-        float[] incomePerAS = new float[this.allASes.size()];
-
-        for (Block block : biggestBlockChain) {
-            incomePerAS[block.getAsId()] += 12.5;
-        }
-
-        System.out.println("");
-        for (int i = 0; i < incomePerAS.length; i++) {
-            System.out.println("Income for the area of AS #" + i + " is: " + incomePerAS[i] + " Bitcoins.");
-        }
+        this.statistics.calculateIncomes(biggestBlockChain);
 
     }
 
     private void createNetWork() {
 
-        requestSimulationTime();
-        int totalASes = requestNumberASes();
-        int totalNodes = requestNumberNodes();
-
-        requestAttack();
-        if (this.thereIsAttack) {
-            requestVictimAS(totalASes);
-        }
-
-        globalProbability = (totalASes * totalNodes) * 3;
-
-        for (int i = 0; i < totalASes; i++) {
+        for (int i = 0; i < numberAses; i++) {
 
             As as = new As(i);
-            for (int j = 0; j < totalNodes; j++) {
+            for (int j = 0; j < numberMiners; j++) {
 
-                Miner miner = new Miner(as, "" + i + "-"+ j);
+                Miner miner = new Miner(this, as, "" + i + "-"+ j);
                 as.registerNewInnerNode(miner.getMinerListener());
                 this.allMiners.add(miner);
 
@@ -134,114 +128,14 @@ public class Simulation {
         }
 
         //Register the ASes in a ring like matter, bidirectionally
-        for (int i = 0; i < totalASes; i++) {
-            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + 1) % totalASes))); // Right relation
-            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + totalASes - 1) % totalASes))); //Left relation
+        for (int i = 0; i < numberAses; i++) {
+            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + 1) % numberAses))); // Right relation
+            this.allASes.get(i).registerAdjacentAs(this.allASes.get(((i + numberAses - 1) % numberAses))); //Left relation
         }
 
     }
 
-    private void requestVictimAS(int totalASes) {
-        do {
 
-            try {
-                System.out.print("Please enter the AS number you want to isolate (between 1 - " + totalASes + "): ");
-                this.victimAS = Integer.parseInt(keyboard.nextLine());
-
-                if (this.victimAS <= 0 || this.victimAS > totalASes) {
-                    System.out.println("Please enter a number, from 1 to "+ totalASes +".");
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                this.victimAS = -1;
-            }
-
-
-        } while (this.victimAS <= 0 || this.victimAS > totalASes);
-
-        this.victimAS--; //Because the IDs start at 0
-
-    }
-
-    private void requestAttack() {
-        String userChoice;
-
-        do {
-            System.out.print("Do you want to make an partition attack [y/n]: ");
-            userChoice = keyboard.nextLine();
-
-            if (!userChoice.equals("y") && !userChoice.equals("n")) {
-                System.out.println("Please enter a valid option...");
-            }
-
-        } while (!userChoice.equals("y") && !userChoice.equals("n"));
-
-        this.thereIsAttack = userChoice.equals("y");
-    }
-
-    private int requestNumberNodes() {
-        int numberNodes;
-        do {
-
-            try {
-                System.out.print("Please enter the number of nodes you want: ");
-                numberNodes = Integer.parseInt(keyboard.nextLine());
-
-                if (numberNodes <= 0 || numberNodes > 50) {
-                    System.out.println("Please enter a number, from 1 to 50.");
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                numberNodes = -1;
-            }
-
-
-        } while (numberNodes <= 0 || numberNodes > 50);
-
-        return numberNodes;
-    }
-
-    private int requestNumberASes() {
-        int numberAS;
-        do {
-
-            try {
-                System.out.print("Please enter the number of ASes you want: ");
-                numberAS = Integer.parseInt(keyboard.nextLine());
-
-                if (numberAS <= 0 || numberAS > 10) {
-                    System.out.println("Please enter a number, from 1 to 10.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                numberAS = -1;
-            }
-
-        } while (numberAS <= 0 || numberAS > 10);
-
-        return numberAS;
-    }
-
-    private void requestSimulationTime() {
-        do {
-
-            try {
-                System.out.print("Please enter the time (in minutes) for the simulation: ");
-                this.simulationTime = Integer.parseInt(keyboard.nextLine());
-
-                if (this.simulationTime <= 0) {
-                    System.out.println("Please enter a number bigger than 0.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a valid number.");
-                this.simulationTime = -1;
-            }
-
-        } while (this.simulationTime <= 0);
-
-    }
 
     private void simulatePartitionAttack(As isolatedAs) {
         for (As indexAs: this.allASes) {
@@ -256,4 +150,11 @@ public class Simulation {
         }
     }
 
+    public Statistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(Statistics statistics) {
+        this.statistics = statistics;
+    }
 }
